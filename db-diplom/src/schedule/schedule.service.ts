@@ -17,7 +17,10 @@ export class ScheduleService {
     }
 
     async findOneByGroup(groupId: number) {
-        return await this.prisma.schedule.findMany({ where: {groupId}, include: {group: true, discipline: true, teacher: true} })
+        return await this.prisma.schedule.findMany({
+            where: { groupId },
+            include: { group: true, discipline: true, teacher: true }
+        });
     }
 
 }

@@ -68,6 +68,7 @@ interface AuthState {
         },
   
         logout: () => {
+          
             removeAuthToken();
             set({ token: null, decodedUser: null, isAuthenticated: false, profileUser: null });
             localStorage.removeItem('auth-storage')

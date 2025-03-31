@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 
@@ -13,13 +13,11 @@ export class ScheduleController {
     }
 
     @Get()
-    async getAll() {
+    async getAll(@Query('groupId') groupId?: number) {
+        if (groupId) {
+            return this.scheduleService.findOneByGroup(Number(groupId));
+        }
         return this.scheduleService.findAll();
-    }
-
-    @Get("/:groupId")
-    async getOneByGroup(@Param('groupId') groupId: number) {
-        return this.scheduleService.findOneByGroup(groupId);
     }
 
 }

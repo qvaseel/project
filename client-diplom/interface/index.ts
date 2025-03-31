@@ -27,6 +27,43 @@ export interface Speciality {
   duration: number;
 }
 
+export interface Schedule {
+  group: Group;
+  discipline: Discipline;
+  teacher: User;
+  dayOfWeek: number;
+  room: string;
+}
+
+export interface Discipline {
+  id: number;
+  name: string;
+  teacher: User;
+  studyPlans: any;
+}
+
+export interface StudyPlan {
+  id: number;
+  speciality: Speciality;
+  discipline: Discipline;
+  semestr: number;
+}
+
+export interface Lesson {
+  id: number;
+  schedule: Schedule;
+  date: string;
+  topic: string;
+}
+
+export interface Grade {
+  id: number;
+  lesson: Lesson;
+  student: User;
+  grade: number;
+  comment?: string;
+}
+
 export interface DecodedUser {
     email: string;
     id: number;
