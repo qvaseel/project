@@ -1,0 +1,16 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+		"init": "npm i && cd client-diplom && npm install --legacy-peer-deps && cd ../db-diplom && npm install --legacy-peer-deps",
+		"start": "concurrently \"cd db-diplom && npm run start:dev\" \"cd client-diplom && npm run dev\""
+	},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

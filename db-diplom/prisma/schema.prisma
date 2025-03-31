@@ -1,0 +1,156 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int    @id @default(autoincrement())
+  email      String @unique
+  password   String
+  lastName   String @map("last_name")
+  firstName  String @map("first_name")
+  patronymic String
+
+  role   Role @relation(fields: [roleId], references: [id])
+  roleId Int  @default(1) @map("role_id")
+
+  group   Group? @relation(fields: [groupId], references: [id])
+  groupId Int?   @map("group_id")
+
+  disciplines Discipline[]
+  shedule     Schedule[]
+  grades      Grade[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Role {
+  id          Int    @id @default(autoincrement())
+  value       String @unique
+  description String
+  user        User[]
+
+  @@map("roles")
+}
+
+model Group {
+  id     Int    @id @default(autoincrement())
+  name   String @unique
+  course Int
+
+  speciality   Speciality @relation(fields: [specialityId], references: [id])
+  specialityId Int        @map("speciality_id")
+
+  students User[]
+
+  shedule Schedule[]
+
+  @@map("groups")
+}
+
+model Speciality {
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
+  duration   Int
+  groups     Group[]
+  studyPlans StudyPlan[]
+
+  @@map("specialities")
+}
+
+model StudyPlan {
+  id Int @id @default(autoincrement())
+
+  speciality   Speciality @relation(fields: [specialityId], references: [id])
+  specialityId Int        @map("speciality_id")
+
+  discipline   Discipline @relation(fields: [disciplineId], references: [id])
+  disciplineId Int        @map("discipline_id")
+
+  semester Int
+
+  @@map("study_plans")
+}
+
+model Discipline {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  teacher   User @relation(fields: [teacherId], references: [id])
+  teacherId Int  @map("teacher_id")
+
+  studyPlans StudyPlan[]
+
+  shedule Schedule[]
+
+  @@map("disciplines")
+}
+
+model Schedule {
+  id Int @id @default(autoincrement())
+
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int   @map("group_id")
+
+  discipline   Discipline @relation(fields: [disciplineId], references: [id])
+  disciplineId Int        @map("discipline_id")
+
+  teacher   User @relation(fields: [teacherId], references: [id])
+  teacherId Int  @map("teacher_id")
+
+  dayOfWeek Int      @map("day_of_week")
+  room      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  lessons Lesson[]
+
+  @@map("schedule")
+}
+
+model Lesson {
+  id Int @id @default(autoincrement())
+
+  schedule   Schedule @relation(fields: [scheduleId], references: [id])
+  scheduleId Int      @map("shedule_id")
+
+  date      DateTime
+  topic     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  grades Grade[]
+
+  @@map("lessons")
+}
+
+model Grade {
+  id Int @id @default(autoincrement())
+
+  lesson   Lesson @relation(fields: [lessonId], references: [id])
+  lessonId Int    @map("lesson_id")
+
+  student   User @relation(fields: [studentId], references: [id])
+  studentId Int  @map("student_id")
+
+  grade   Int
+  comment String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("grades")
+}
