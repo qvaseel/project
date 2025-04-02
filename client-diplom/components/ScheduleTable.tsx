@@ -22,7 +22,7 @@ const ScheduleTable: React.FC = () => {
         .map(dayNumber => {
           const dayIndex = Number(dayNumber) - 1;
           return (
-            <div key={dayNumber} className={`bg-white shadow-md border  ${currentDayOfWeek == Number(dayNumber) ? 'border-2 border-indigo-800' : 'border-cyan-600'} rounded-lg p-4`}>
+            <div key={dayNumber} className={`bg-white shadow-md border  ${currentDayOfWeek == Number(dayNumber) ? 'border-2 border-cyan-600' : 'border-slate-400'} rounded-lg p-4`}>
               <h2 className="text-xl font-bold mb-3">{daysOfWeek[dayIndex]}</h2>
               <Table.Root>
                 <Table.Header>

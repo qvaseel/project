@@ -16,10 +16,11 @@ import { RoleModule } from 'src/role/role.module';
     JwtModule.register({
       secret: process.env.PRIVATE_KEY || 'SECRET',
       signOptions: {
-        expiresIn: '30min'
+        expiresIn: '30m'
       }
     })
   ],
   exports: [AuthService, JwtModule]
 })
+
 export class AuthModule {}

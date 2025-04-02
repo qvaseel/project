@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect } from 'react';
-import ScheduleTable from '../../../components/ScheduleTable';
+import ScheduleTable from '@/components/ScheduleTable';
 import { useScheduleStore } from '@/store/scheduleStore';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import { Spinner } from '@radix-ui/themes';

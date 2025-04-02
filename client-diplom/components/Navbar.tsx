@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import useAuthStore from "@/store/authStore";
+import { useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { Skeleton } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 import { useUserProfile } from "@/hooks/useUserProfile";
+
 const Navbar = () => {
   const { profileUser, loading, logout } = useUserProfile();
     
@@ -32,7 +32,7 @@ const Navbar = () => {
           {menuOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
               <button
-                onClick={() => (console.log())}
+                onClick={() => {router.push("/profile");}}
                 className="block w-full text-left px-4 py-2 text-sm hover:bg-slate-100"
               >
                 Перейти в профиль

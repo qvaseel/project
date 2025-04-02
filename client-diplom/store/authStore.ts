@@ -18,7 +18,7 @@ interface AuthState {
   }
   
 
-  const useAuthStore = create<AuthState>()(
+  const useAuthStore = create<AuthState>() (
     persist(
       (set, get) => ({
         isAuthenticated: false,
@@ -39,7 +39,9 @@ interface AuthState {
             set({ decodedUser: null, profileUser: null });
           }
         },
+        
         setDecodedUser: (decodedUser) => set({ decodedUser }),
+
         setProfileUser: async (id: number) => {
           try {
             const response = await api.get(`/users/${id}`, {

@@ -17,16 +17,9 @@ export default async function RootLayout({
     <html lang="ru">
       <head>
         <link rel="icon" href="/favicon.ico" sizes="32x32" />
-        <link rel="icon" href="../public/favicon.ico" sizes="32x32" />
         <link
           rel="icon"
           href="/favicon.png"
-          type="image/png"
-          sizes="32x32"
-        />
-         <link
-          rel="icon"
-          href="../public/favicon.png"
           type="image/png"
           sizes="32x32"
         />

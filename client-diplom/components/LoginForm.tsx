@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import useAuthStore from "@/store/authStore";
 import { Button, Link, Text, TextField } from "@radix-ui/themes";
 import { redirect } from "next/navigation";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 interface LoginFormInputs {
   email: string;
@@ -19,10 +20,20 @@ const LoginForm = () => {
 
   const onSubmit = async (data: LoginFormInputs) => {
     const success = await login(data.email, data.password);
+    const { decodedUser } = useAuthStore.getState();
     if (success) {
       console.log("Вход успешен");
+      if (decodedUser?.roles) {
+        console.log("Роль пользователя:", decodedUser.roles);
 
-      redirect("/dashboard");
+        if (decodedUser.roles[0] === "ADMIN") {
+          redirect("/admin-panel");
+        } else if (decodedUser.roles[0] === "TEACHER") {
+          redirect("/teacher-panel");
+        } else {
+          redirect("/dashboard");
+        }
+      }
     } else {
       alert("Не удалось войти. Проверьте почту и пароль");
     }
@@ -68,7 +79,7 @@ const LoginForm = () => {
         </Button>
       </form>
       <Link href="#" size="1" weight="light" underline="always" highContrast>
-         Забыли пароль?
+        Забыли пароль?
       </Link>
     </div>
   );
