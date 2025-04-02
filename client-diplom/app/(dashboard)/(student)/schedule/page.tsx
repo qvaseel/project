@@ -7,15 +7,15 @@ import { useUserProfile } from '@/hooks/useUserProfile';
 import { Spinner } from '@radix-ui/themes';
 
 const SchedulePage: React.FC = () => {
-  const fetchSchedule = useScheduleStore((state) => state.fetchSchedule);
+  const fetchScheduleForGroup = useScheduleStore((state) => state.fetchScheduleForGroup);
   const scLoading = useScheduleStore((state) => state.loading);
   const { profileUser, loading, groupId } = useUserProfile();
 
   useEffect(() => {
-    if (groupId) {
-      fetchSchedule(groupId);
+    if (profileUser?.group?.id) { 
+      fetchScheduleForGroup(profileUser.group.id);
     }
-  }, [fetchSchedule, profileUser]);
+  }, [fetchScheduleForGroup, profileUser]);
 
   return (
     <div className="container mx-auto p-6">

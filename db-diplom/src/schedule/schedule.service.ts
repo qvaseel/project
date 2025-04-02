@@ -23,4 +23,11 @@ export class ScheduleService {
         });
     }
 
+    async findOneByTeacher(teacherId: number) {
+        return await this.prisma.schedule.findMany({
+            where: { teacherId },
+            include: { group: true, discipline: true, teacher: true }
+        });
+    }
+
 }

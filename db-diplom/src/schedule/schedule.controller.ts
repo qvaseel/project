@@ -12,12 +12,14 @@ export class ScheduleController {
         return this.scheduleService.create(data)
     }
 
-    @Get()
-    async getAll(@Query('groupId') groupId?: number) {
-        if (groupId) {
-            return this.scheduleService.findOneByGroup(Number(groupId));
-        }
-        return this.scheduleService.findAll();
+    @Get('/group/:groupId')
+    async getOneByGroup(@Param('groupId') groupId: number) {
+        return this.scheduleService.findOneByGroup(Number(groupId));
+    }
+
+    @Get('/teacher/:teacherId')
+    async getOneByTeacher(@Param('teacherId') teacherId: number) {
+        return this.scheduleService.findOneByTeacher(Number(teacherId));
     }
 
 }
