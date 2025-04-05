@@ -1,7 +1,9 @@
-import React from 'react';
-import { Schedule } from '@/interface';
-import ScheduleEntryRow from './ScheduleEntryRow'
-import ScheduleEntryForm from './ScheduleEntryForm';
+import React, { useState } from "react";
+import { Schedule } from "@/interface";
+import ScheduleEntryRow from "./ScheduleEntryRow";
+import ScheduleEntryForm from "./ScheduleEntryForm";
+import { PlusIcon } from "@heroicons/react/24/outline";
+import { Box, Button, Card, Flex, Heading } from "@radix-ui/themes";
 
 interface Props {
   dayOfWeek: number;
@@ -10,17 +12,46 @@ interface Props {
   selectedGroup: number | null;
 }
 
-const ScheduleDayColumn: React.FC<Props> = ({ dayOfWeek, dayName, schedule, selectedGroup }) => {
+const ScheduleDayColumn: React.FC<Props> = ({
+  dayOfWeek,
+  dayName,
+  schedule,
+  selectedGroup,
+}) => {
+  const [isAdding, setIsAdding] = useState(false);
   return (
-    <div className="border rounded p-2">
-      <h3 className="text-lg font-semibold mb-2">{dayName}</h3>
-      {schedule
-        .sort((a, b) => (a.orderNumber || 0) - (b.orderNumber || 0))
-        .map(item => (
-          <ScheduleEntryRow key={item.id} entry={item} selectedGroup={selectedGroup} />
-        ))}
-      <ScheduleEntryForm dayOfWeek={dayOfWeek} selectedGroup={selectedGroup} />
-    </div>
+    <Box>
+      <Card>
+        <Flex as="div" display='flex' direction='column' gap='2'>
+          <Heading size="3" as="h3">
+            {dayName}
+          </Heading>
+          {schedule
+            .sort((a, b) => a.orderNumber - b.orderNumber)
+            .map((entry) => (
+              <ScheduleEntryRow
+                key={entry.id}
+                entry={entry}
+                selectedGroup={selectedGroup}
+              />
+            ))}
+
+          {isAdding && selectedGroup !== null && (
+            <ScheduleEntryForm
+              dayOfWeek={dayOfWeek}
+              selectedGroup={selectedGroup}
+            />
+          )}
+
+          <Button
+            onClick={() => setIsAdding((prev) => !prev)}
+            variant={`${isAdding ? "soft" : "outline"}`}
+          >
+            {isAdding ? "Отменить" : <PlusIcon className="w-6 h-6" />}
+          </Button>
+        </Flex>
+      </Card>
+    </Box>
   );
 };
 

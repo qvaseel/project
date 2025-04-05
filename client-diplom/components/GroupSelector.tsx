@@ -1,5 +1,6 @@
-import React from 'react';
-import { useGroupStore } from '@/store/groupStore';
+import React from "react";
+import { useGroupStore } from "@/store/groupStore";
+import { Select } from "@radix-ui/themes";
 
 interface GroupSelectorProps {
   setSelectedGroup: (id: number | null) => void;
@@ -7,21 +8,25 @@ interface GroupSelectorProps {
 
 const GroupSelector: React.FC<GroupSelectorProps> = ({ setSelectedGroup }) => {
   const { groups } = useGroupStore();
+  const [value, setValue] = React.useState<string>("");
+
+  const handleChange = (val: string) => {
+    setValue(val);
+    setSelectedGroup(val ? Number(val) : null);
+  };
 
   return (
     <div className="mb-4">
-      <select
-        className="border p-2 rounded"
-        onChange={(e) => setSelectedGroup(Number(e.target.value))}
-        defaultValue=""
-      >
-        <option value="" disabled>Выберите группу</option>
-        {groups.map((group) => (
-          <option key={group.id} value={group.id}>
-            {group.name}
-          </option>
-        ))}
-      </select>
+      <Select.Root value={value} onValueChange={handleChange}>
+        <Select.Trigger placeholder="Выберите группу" />
+        <Select.Content position="popper">
+          {groups.map((group) => (
+            <Select.Item key={group.id} value={String(group.id)}>
+              {group.name}
+            </Select.Item>
+          ))}
+        </Select.Content>
+      </Select.Root>
     </div>
   );
 };

@@ -4,8 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { useScheduleStore } from '@/store/scheduleStore';
 import { useGroupStore } from '@/store/groupStore';
 import GroupSelector from '@/components/GroupSelector';
-import ScheduleEditor from '@/components/ScheduleEditor';
-import ScheduleForm from '@/components/ScheduleForm';
 import ScheduleTableAdmin from '@/components/ScheduleTableAdmin/ScheduleTableAdmin';
 
 const AdminSchedulePage: React.FC = () => {
