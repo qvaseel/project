@@ -10,4 +10,8 @@ export class GroupService {
     public async create(data: CreateGroupDto) {
         return await this.prisma.group.create({ data });
     }
+
+    public async findAll() {
+        return await this.prisma.group.findMany();
+    }
 }

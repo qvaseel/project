@@ -30,4 +30,17 @@ export class ScheduleService {
         });
     }
 
+    async update(id: number, data: CreateScheduleDto) {
+        return await this.prisma.schedule.update({
+            where: { id },
+            data,
+        });
+    }
+    
+    async delete(id: number) {
+        return await this.prisma.schedule.delete({
+            where: { id },
+        });
+    }    
+
 }

@@ -20,6 +20,7 @@ model User {
   lastName   String @map("last_name")
   firstName  String @map("first_name")
   patronymic String
+  dateOfBirth DateTime @default(now()) @map("date_of_birth") 
 
   role   Role @relation(fields: [roleId], references: [id])
   roleId Int  @default(1) @map("role_id")
@@ -101,10 +102,11 @@ model Discipline {
 
 model Schedule {
   id Int @id @default(autoincrement())
+  orderNumber Int @default(0) @map("order_number")
 
   group   Group @relation(fields: [groupId], references: [id])
   groupId Int   @map("group_id")
-
+ 
   discipline   Discipline @relation(fields: [disciplineId], references: [id])
   disciplineId Int        @map("discipline_id")
 
@@ -146,6 +148,7 @@ model Grade {
   student   User @relation(fields: [studentId], references: [id])
   studentId Int  @map("student_id")
 
+  attend Boolean @default(false)
   grade   Int
   comment String?
 

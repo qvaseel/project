@@ -4,6 +4,7 @@ export interface User {
   lastName: string;
   firstName: string;
   patronymic: string;
+  dayOfBirth: string;
   role: Role;
   group?: Group;
 }
@@ -28,9 +29,22 @@ export interface Speciality {
 }
 
 export interface Schedule {
+  id: number;
+  orderNumber: number;
   group: Group;
   discipline: Discipline;
   teacher: User;
+  dayOfWeek: number;
+  room: string;
+  groupId?: number;
+}
+
+export interface CreateScheduleDto {
+  id: number;
+  orderNumber: number;
+  groupId: number;
+  disciplineId: number;
+  teacherId: number;
   dayOfWeek: number;
   room: string;
 }
@@ -58,6 +72,7 @@ export interface Lesson {
 
 export interface Grade {
   id: number;
+  attend: boolean;
   lesson: Lesson;
   student: User;
   grade: number;
@@ -65,15 +80,7 @@ export interface Grade {
 }
 
 export interface DecodedUser {
-    email: string;
-    id: number;
-    roles: string[];
-}
-
-export interface UserState {
-  user: User | null;
-
-  users: User[] | null;
-  setUser: () => Promise<boolean>;
-  getAllUsers: () => Promise<void>;
+  email: string;
+  id: number;
+  roles: string[];
 }

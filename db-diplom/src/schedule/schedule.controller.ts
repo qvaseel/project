@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 
@@ -20,6 +20,16 @@ export class ScheduleController {
     @Get('/teacher/:teacherId')
     async getOneByTeacher(@Param('teacherId') teacherId: number) {
         return this.scheduleService.findOneByTeacher(Number(teacherId));
+    }
+
+    @Put('/:id')
+    async update(@Param('id') id: number, @Body() data: CreateScheduleDto) {
+        return this.scheduleService.update(Number(id), data);
+    }
+
+    @Delete('/:id')
+    async delete(@Param('id') id: number) {
+        return this.scheduleService.delete(Number(id));
     }
 
 }

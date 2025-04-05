@@ -1,22 +1,11 @@
 import React from "react";
-import { Schedule } from "@/interface/index"; // Импортируй тип Schedule
 import { useScheduleStore } from "@/store/scheduleStore";
 import { Table } from "@radix-ui/themes";
+import { daysOfWeek } from '@/utils/constants';
 
 const TeacherScheduleTable: React.FC = () => {
   const schedule = useScheduleStore((state) => state.schedule);
   const currentDayOfWeek = new Date().getDay();
-
-  const adjustedDayOfWeek = currentDayOfWeek === 0 ? 7 : currentDayOfWeek; // 1 = Понедельник, 7 = Воскресенье
-
-  const daysOfWeek = [
-    "Понедельник",
-    "Вторник",
-    "Среда",
-    "Четверг",
-    "Пятница",
-    "Суббота",
-  ];
 
   return (
     <div className="flex justify-between flex-wrap w-full gap-y-8">

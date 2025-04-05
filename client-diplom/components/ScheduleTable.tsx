@@ -2,15 +2,7 @@ import React from "react";
 import { Schedule } from "@/interface/index";
 import { useScheduleStore } from "@/store/scheduleStore";
 import { Table } from "@radix-ui/themes";
-
-const daysOfWeek = [
-  "Понедельник",
-  "Вторник",
-  "Среда",
-  "Четверг",
-  "Пятница",
-  "Суббота",
-];
+import { daysOfWeek } from '@/utils/constants';
 
 const ScheduleTable: React.FC = () => {
   const schedule = useScheduleStore((state) => state.schedule);

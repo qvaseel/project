@@ -1,29 +1,73 @@
-import { create } from "zustand";
-import { User } from "@/interface";
-import useAuthStore from "./authStore";
-import { getAuthToken } from "@/utils/auth";
-import { api } from "@/api/api";
+import { create } from 'zustand';
+import { api } from '@/api/api';
+import { User } from '@/interface/index';
+import { getAuthToken } from '@/utils/auth';
 
-// const{ decodedUser, token} = useAuthStore();
-
-interface UserStore {
-  user: User | null;
-  users: User[] | null;
-  setUser: () => Promise<boolean>;
-  getAllUsers: () => Promise<void>;
-  token: string | null;
-
+interface UserState {
+  users: User[];
+  loading: boolean;
+  error: string | null;
+  fetchStudents: () => Promise<void>;
+  fetchTeachers: () => Promise<void>;
+  createUser: (user: Partial<User>) => Promise<void>;
+  updateUser: (id: number, user: Partial<User>) => Promise<void>;
+  deleteUser: (id: number) => Promise<void>;
 }
 
-// export const useUserStore = create<UserStore>((set) =>({
-//   user: null,
-//   users: null,
+export const useUserStore = create<UserState>((set) => ({
+  users: [],
+  loading: false,
+  error: null,
 
-//   setUser: async () => {
-//     const token = getAuthToken();
-//     // const token = cookieStore.get('token')?.value;
-//     if (token) {
-//       const response = await api.get<User>('/user')
-//     }
-//   }
-// }))
+  fetchStudents: async () => {
+    set({ loading: true, error: null });
+    try {
+      const { data } = await api.get<User[]>('/users/get/students',
+        
+      );
+      set({ users: data, loading: false });
+    } catch (error: any) {
+      set({ error: error.message, loading: false });
+    }
+  },
+
+  fetchTeachers: async () => {
+    set({ loading: true, error: null });
+    const token = getAuthToken();
+    console.log(token)
+    try {
+      const { data } = await api.get<User[]>('/users/get/teachers',
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      set({ users: data, loading: false });
+    } catch (error: any) {
+      set({ error: error.message, loading: false });
+    }
+  },
+
+  createUser: async (user) => {
+    try {
+      await api.post('/users', user);
+    } catch (error: any) {
+      set({ error: error.message });
+    }
+  },
+
+  updateUser: async (id, user) => {
+    try {
+      await api.put(`/users/${id}`, user);
+    } catch (error: any) {
+      set({ error: error.message });
+    }
+  },
+
+  deleteUser: async (id) => {
+    try {
+      await api.delete(`/users/${id}`);
+    } catch (error: any) {
+      set({ error: error.message });
+    }
+  },
+}));
