@@ -20,7 +20,7 @@ model User {
   lastName   String @map("last_name")
   firstName  String @map("first_name")
   patronymic String
-  dateOfBirth DateTime @default(now()) @map("date_of_birth") 
+  dateOfBirth String @map("date_of_birth") 
 
   role   Role @relation(fields: [roleId], references: [id])
   roleId Int  @default(1) @map("role_id")
@@ -129,7 +129,7 @@ model Lesson {
   schedule   Schedule @relation(fields: [scheduleId], references: [id])
   scheduleId Int      @map("shedule_id")
 
-  date      DateTime
+  date      String
   topic     String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

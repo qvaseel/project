@@ -79,6 +79,14 @@ export interface Grade {
   comment?: string;
 }
 
+export interface CreateGradeDto {
+  lessonId: number;
+  studentId: number;
+  grade: number;
+  attend: boolean;
+  comment?: string;
+}
+
 export interface DecodedUser {
   email: string;
   id: number;

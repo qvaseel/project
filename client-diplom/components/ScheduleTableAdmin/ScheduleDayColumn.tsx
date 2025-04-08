@@ -20,28 +20,37 @@ const ScheduleDayColumn: React.FC<Props> = ({
 }) => {
   const [isAdding, setIsAdding] = useState(false);
   return (
-    <Box>
-      <Card>
-        <Flex as="div" display='flex' direction='column' gap='2'>
-          <Heading size="3" as="h3">
-            {dayName}
-          </Heading>
-          {schedule
-            .sort((a, b) => a.orderNumber - b.orderNumber)
-            .map((entry) => (
-              <ScheduleEntryRow
-                key={entry.id}
-                entry={entry}
+    <Box height="full">
+      <Card className="h-full flex flex-col">
+        <Flex
+          as="div"
+          display="flex"
+          direction="column"
+          gap="4"
+          justify="between"
+          className="flex-1 h-full"
+        >
+          <Flex as="div" display="flex" direction="column" gap="2">
+            <Heading size="3" as="h3">
+              {dayName}
+            </Heading>
+            {schedule
+              .sort((a, b) => a.orderNumber - b.orderNumber)
+              .map((entry) => (
+                <ScheduleEntryRow
+                  key={entry.id}
+                  entry={entry}
+                  selectedGroup={selectedGroup}
+                />
+              ))}
+
+            {isAdding && selectedGroup !== null && (
+              <ScheduleEntryForm
+                dayOfWeek={dayOfWeek}
                 selectedGroup={selectedGroup}
               />
-            ))}
-
-          {isAdding && selectedGroup !== null && (
-            <ScheduleEntryForm
-              dayOfWeek={dayOfWeek}
-              selectedGroup={selectedGroup}
-            />
-          )}
+            )}
+          </Flex>
 
           <Button
             onClick={() => setIsAdding((prev) => !prev)}

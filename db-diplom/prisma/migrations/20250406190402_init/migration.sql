@@ -1,28 +1,14 @@
-/*
-  Warnings:
-
-  - You are about to drop the `Post` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `User` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropForeignKey
-ALTER TABLE "Post" DROP CONSTRAINT "Post_authorId_fkey";
-
--- DropTable
-DROP TABLE "Post";
-
--- DropTable
-DROP TABLE "User";
-
 -- CreateTable
 CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "last_name" TEXT NOT NULL,
     "first_name" TEXT NOT NULL,
     "patronymic" TEXT NOT NULL,
+    "date_of_birth" TEXT NOT NULL,
     "role_id" INTEGER NOT NULL DEFAULT 1,
-    "group_id" INTEGER NOT NULL,
+    "group_id" INTEGER,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -79,6 +65,7 @@ CREATE TABLE "disciplines" (
 -- CreateTable
 CREATE TABLE "schedule" (
     "id" SERIAL NOT NULL,
+    "order_number" INTEGER NOT NULL DEFAULT 0,
     "group_id" INTEGER NOT NULL,
     "discipline_id" INTEGER NOT NULL,
     "teacher_id" INTEGER NOT NULL,
@@ -107,6 +94,7 @@ CREATE TABLE "grades" (
     "id" SERIAL NOT NULL,
     "lesson_id" INTEGER NOT NULL,
     "student_id" INTEGER NOT NULL,
+    "attend" BOOLEAN NOT NULL DEFAULT false,
     "grade" INTEGER NOT NULL,
     "comment" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -119,9 +107,6 @@ CREATE TABLE "grades" (
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_role_id_key" ON "users"("role_id");
-
--- CreateIndex
 CREATE UNIQUE INDEX "roles_value_key" ON "roles"("value");
 
 -- CreateIndex
@@ -130,11 +115,14 @@ CREATE UNIQUE INDEX "groups_name_key" ON "groups"("name");
 -- CreateIndex
 CREATE UNIQUE INDEX "specialities_name_key" ON "specialities"("name");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "disciplines_name_key" ON "disciplines"("name");
+
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_role_id_fkey" FOREIGN KEY ("role_id") REFERENCES "roles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_group_id_fkey" FOREIGN KEY ("group_id") REFERENCES "groups"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "users" ADD CONSTRAINT "users_group_id_fkey" FOREIGN KEY ("group_id") REFERENCES "groups"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "groups" ADD CONSTRAINT "groups_speciality_id_fkey" FOREIGN KEY ("speciality_id") REFERENCES "specialities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -20,4 +20,8 @@ export class CreateScheduleDto {
     @IsNotEmpty()
     @IsString()
     room: string;
+
+    @IsNotEmpty()
+    @IsNumber()
+    orderNumber: number;
 }

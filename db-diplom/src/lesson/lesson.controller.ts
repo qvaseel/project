@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { LessonService } from './lesson.service';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 
@@ -12,14 +12,18 @@ export class LessonController {
         return this.lessonService.create(data);
     }
 
-    @Get()
-    async getAll() {
-        return this.lessonService.findAll();
-    }
+    // @Get()
+    // async getAll() {
+    //     return this.lessonService.findAll();
+    // }
 
     @Get("/:id")
     async getOneById(@Param("id") id: number) {
-        return this.lessonService.findOne(id);
+        return this.lessonService.findOne(Number(id));
     }
 
+    @Get()
+    async getAllByParams(@Query('groupId') groupId: number, @Query('disciplineId') disciplineId: number) {
+        return this.lessonService.findAllByGroupAndDiscipline(Number(groupId), Number(disciplineId));
+    }
 }

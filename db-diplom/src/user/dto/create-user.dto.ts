@@ -28,4 +28,8 @@ export class CreateUserDto {
     @IsNotEmpty()
     @IsNumber()
     groupId: number;
+
+    @IsNotEmpty()
+    @IsString()
+    dateOfBirth: string;
 }

@@ -55,6 +55,13 @@ export class UserController {
 
   @Roles('ADMIN', 'TEACHER', 'STUDENT')
   @UseGuards(RolesGuard)
+  @Get('/get/students/:groupId')
+  getStudentsByGroup(@Param('groupId') groupId: number) {
+    return this.userService.findAllStudentsByGroup(Number(groupId));
+  }
+
+  @Roles('ADMIN', 'TEACHER', 'STUDENT')
+  @UseGuards(RolesGuard)
   @Get('/get/teachers')
   getTeachers() {
     return this.userService.findAllTeachers();

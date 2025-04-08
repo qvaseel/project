@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { GradeService } from './grade.service';
 import { CreateGradeDto } from './dto/create-grade.dto';
 
@@ -12,13 +12,18 @@ export class GradeController {
         return this.gradeService.create(data);
     }
 
-    @Get()
-    async getAll() {
-        return this.gradeService.findAll();
+    @Get('by-student')
+    async getAllByStudent(@Query('studentId') studentId: number, @Query('disciplineId') disciplineId: number) {
+        return this.gradeService.findAllByStudentAndDiscipline(Number(studentId), Number(disciplineId));
+    }
+
+    @Get('by-group')
+    async getAllByGroup(@Query('groupId') groupId: number, @Query('disciplineId') disciplineId: number) {
+        return this.gradeService.findAllByGroupAndDiscipline(Number(groupId), Number(disciplineId));
     }
 
     @Get("/:studentId")
-    async getOneByStudent(@Param('studentId') studentId: number) {
+    async getManyByStudent(@Param('studentId') studentId: number) {
         return this.gradeService.findOne(studentId)
     }
 

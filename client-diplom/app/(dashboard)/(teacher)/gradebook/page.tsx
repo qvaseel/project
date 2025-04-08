@@ -1,110 +1,132 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react';
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from '@radix-ui/react-dialog';
-import { Checkbox } from '@radix-ui/react-checkbox';
-import { HomeIcon, ScaleIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
-import { toast } from 'react-hot-toast';
-import { Button } from '@radix-ui/themes';
+import { useEffect, useState } from "react";
+import GroupSelector from "@/components/GroupSelector";
+import { useUserStore } from "@/store/userStore";
+import { useLessonStore } from "@/store/lessonStore";
+import { useGradeStore } from "@/store/gradeStore";
+import { useScheduleStore } from "@/store/scheduleStore";
+import dayjs from "dayjs";
+import Link from "next/link";
+import { useDisciplineStore } from "@/store/disciplineStore";
+import { useGroupStore } from "@/store/groupStore";
+import DisciplineSelector from "@/components/DisciplineSelector";
+import { Select } from "@radix-ui/themes";
+import useAuthStore from "@/store/authStore";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
-const AttendanceJournal = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [students, setStudents] = useState([
-    { id: 1, name: 'Иван Иванов', group: 'ИС-2101', grade: '', attendance: false },
-    { id: 2, name: 'Анна Смирнова', group: 'ИС-2101', grade: '', attendance: false },
-    { id: 3, name: 'Пётр Петров', group: 'ИС-2101', grade: '', attendance: false },
-  ]);
+export default function TeacherJournalPage() {
+  const { profileUser: user, loading } = useUserProfile();
+  const { lessons, loadLessonsByFilter } = useLessonStore();
+  const { grades, loadAllGradeByGroup } = useGradeStore();
 
-  const handleSave = () => {
-    setShowModal(true);
-  };
+  const { disciplines, fetchDisciplines } = useDisciplineStore();
+  const { users: students, fetchStudentsByGroup } = useUserStore();
 
-  const confirmSave = () => {
-    console.log('Сохранено:', students);
-    toast.success('Оценки успешно сохранены!');
-    setShowModal(false);
-  };
+  const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
+  const [selectedDiscipline, setSelectedDiscipline] = useState<number | null>(
+    null
+  );
 
-  const updateStudent = (index: any, key: any, value: any) => {
-    const updatedStudents = [...students];
-    setStudents(updatedStudents);
-  };
+  const { fetchGroups } = useGroupStore();
+
+  const [semester, setSemester] = useState<number>(1);
+
+  useEffect(() => {
+    fetchGroups();
+    if (selectedGroup) fetchStudentsByGroup(selectedGroup);
+
+    fetchDisciplines();
+  }, [selectedGroup, fetchStudentsByGroup, fetchGroups]);
+
+  // Загружаем уроки при смене фильтров
+  useEffect(() => {
+    if (selectedGroup && selectedDiscipline && user?.id) {
+      loadAllGradeByGroup(selectedGroup, selectedDiscipline)
+      console.log(selectedGroup, selectedDiscipline)
+      loadLessonsByFilter(selectedGroup, selectedDiscipline);
+      console.log(grades)
+    }
+  }, [selectedGroup, selectedDiscipline, semester, user?.id]);
+
+  const sortedLessons = [...lessons].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Журнал успеваемости</h1>
+    <div className="p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Журнал преподавателя</h1>
 
-      <div className="flex gap-4 mb-4">
-        <select>
-          <option>ИС-2101</option>
-          <option>ИС-2102</option>
-        </select>
+      {/* === Фильтры === */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <GroupSelector setSelectedGroup={setSelectedGroup} />
 
-        <select>
-          <option>Математика</option>
-          <option>Программирование</option>
-        </select>
+        <DisciplineSelector setSelectedDiscipline={setSelectedDiscipline} />
 
-        <select>
-          <option>2025-04-04</option>
-          <option>2025-04-03</option>
-        </select>
+        <div>
+          <label>Семестр</label>
+          <Select.Root
+            value={String(semester)}
+            onValueChange={(val: string) => setSemester(Number(val))}
+          >
+            <Select.Content>
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+                <Select.Item key={s} value={String(s)}>
+                  {s}
+                </Select.Item>
+              ))}
+            </Select.Content>
+          </Select.Root>
+        </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="table-auto w-full border-collapse border border-gray-300">
-          <thead>
-            <tr>
-              <th className="border px-4 py-2">ФИО</th>
-              <th className="border px-4 py-2">Группа</th>
-              <th className="border px-4 py-2">Оценка</th>
-              <th className="border px-4 py-2">Посещаемость</th>
-              <th className="border px-4 py-2">Сохранить</th>
-            </tr>
-          </thead>
-          <tbody>
-            {students.map((student, index) => (
-              <tr key={student.id}>
-                <td className="border px-4 py-2">{student.name}</td>
-                <td className="border px-4 py-2">{student.group}</td>
-                <td className="border px-4 py-2">
-                  <input
-                    type="text"
-                    value={student.grade}
-                    onChange={(e) => updateStudent(index, 'grade', e.target.value)}
-                    className="border p-1 w-full"
-                  />
-                </td>
-                <td className="border px-4 py-2">
-                  <Checkbox
-                    checked={student.attendance}
-                    onCheckedChange={(value) => updateStudent(index, 'attendance', value)}
-                  />
-                </td>
-                <td className="border px-4 py-2">
-                  <Button onClick={handleSave}>
-                    <ScaleIcon className="w-5 h-5 mr-1 inline-block" />Сохранить
-                  </Button>
-                </td>
+      {/* === Таблица журнала === */}
+      {students.length > 0 && sortedLessons.length > 0 ? (
+        <div className="overflow-auto">
+          <table className="min-w-full border border-gray-300 mt-6 text-sm text-center">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="border px-2 py-1 text-left">Студент</th>
+                {sortedLessons.map((lesson) => (
+                  <th key={lesson.id} className="border px-2 py-1">
+                    <Link
+                      href={`/gradebook/${lesson.id}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      {dayjs(lesson.date).format("DD.MM")}
+                    </Link>
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogTrigger />
-        <DialogContent>
-          <DialogTitle>Подтверждение сохранения</DialogTitle>
-          <DialogDescription>Вы уверены, что хотите сохранить изменения?</DialogDescription>
-          <div className="flex gap-4 mt-4">
-            <Button onClick={confirmSave}>Да, сохранить</Button>
-            <Button onClick={() => setShowModal(false)}>Отмена</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+            </thead>
+            <tbody>
+              {students.map((student) => (
+                <tr key={student.id}>
+                  <td className="border px-2 py-1 text-left">
+                    {`${student.lastName} ${student.firstName} ${student.patronymic}`}
+                  </td>
+                  {sortedLessons.map((lesson) => {
+                    const grade = grades.find(
+                      (g) => g.lesson.id === lesson.id && g.student.id === student.id
+                    );
+                    return (
+                      <td key={lesson.id} className="border px-2 py-1">
+                        {grade?.grade ?? (
+                          <span className="text-gray-400">–</span>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p className="text-gray-500">
+          Выберите фильтры для отображения журнала.
+        </p>
+      )}
     </div>
   );
-};
-
-export default AttendanceJournal;
+}

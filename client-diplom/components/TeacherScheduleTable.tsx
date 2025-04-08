@@ -8,7 +8,7 @@ const TeacherScheduleTable: React.FC = () => {
   const currentDayOfWeek = new Date().getDay();
 
   return (
-    <div className="flex justify-between flex-wrap w-full gap-y-8">
+    <div className="grid grid-cols-3 gap-4 w-full">
       {daysOfWeek.map((day, index) => {
         const dayNumber = index + 1;
 

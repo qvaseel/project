@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class CreateGradeDto {
     @IsNotEmpty()
@@ -15,4 +15,8 @@ export class CreateGradeDto {
 
     @IsString()
     comment?: string;
+
+    @IsNotEmpty()
+    @IsBoolean()
+    attend: boolean;
 }

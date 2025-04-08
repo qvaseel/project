@@ -70,6 +70,10 @@ export class UserService {
     return this.userRepository.user.findMany({ where: { role: { value: 'STUDENT' } } });
   }
 
+  public async findAllStudentsByGroup(groupId: number) {
+    return this.userRepository.user.findMany({ where: { group: {id: groupId }} })
+  }
+
   public async findAllTeachers() {
     return this.userRepository.user.findMany({ where: { role: { value: 'TEACHER' } } });
   }

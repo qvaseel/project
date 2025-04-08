@@ -8,6 +8,7 @@ interface UserState {
   loading: boolean;
   error: string | null;
   fetchStudents: () => Promise<void>;
+  fetchStudentsByGroup: (groupId: number) => Promise<void>;
   fetchTeachers: () => Promise<void>;
   createUser: (user: Partial<User>) => Promise<void>;
   updateUser: (id: number, user: Partial<User>) => Promise<void>;
@@ -21,9 +22,27 @@ export const useUserStore = create<UserState>((set) => ({
 
   fetchStudents: async () => {
     set({ loading: true, error: null });
+    const token = getAuthToken();
     try {
       const { data } = await api.get<User[]>('/users/get/students',
-        
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      set({ users: data, loading: false });
+    } catch (error: any) {
+      set({ error: error.message, loading: false });
+    }
+  },
+
+  fetchStudentsByGroup: async (groupId: number) => {
+    set({ loading: true, error: null });
+    const token = getAuthToken();
+    try {
+      const { data } = await api.get<User[]>(`/users/get/students/${groupId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       set({ users: data, loading: false });
     } catch (error: any) {
@@ -34,7 +53,6 @@ export const useUserStore = create<UserState>((set) => ({
   fetchTeachers: async () => {
     set({ loading: true, error: null });
     const token = getAuthToken();
-    console.log(token)
     try {
       const { data } = await api.get<User[]>('/users/get/teachers',
         {
