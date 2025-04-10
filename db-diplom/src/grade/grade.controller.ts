@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { GradeService } from './grade.service';
 import { CreateGradeDto } from './dto/create-grade.dto';
 
@@ -27,4 +27,8 @@ export class GradeController {
         return this.gradeService.findOne(studentId)
     }
 
+    @Patch('/:id')
+    async update(@Param('id') id: number, @Body() data: Partial<CreateGradeDto>) {
+      return this.gradeService.update(Number(id), data);
+    }
 }

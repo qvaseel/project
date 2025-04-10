@@ -11,16 +11,18 @@ import Link from "next/link";
 import { useDisciplineStore } from "@/store/disciplineStore";
 import { useGroupStore } from "@/store/groupStore";
 import DisciplineSelector from "@/components/DisciplineSelector";
-import { Select } from "@radix-ui/themes";
-import useAuthStore from "@/store/authStore";
+import { Flex, Select, Skeleton, Table } from "@radix-ui/themes";
 import { useUserProfile } from "@/hooks/useUserProfile";
+import { getGradeValue } from "@/utils/getGrade";
+import useAuthStore from "@/store/authStore";
+
 
 export default function TeacherJournalPage() {
   const { profileUser: user, loading } = useUserProfile();
   const { lessons, loadLessonsByFilter } = useLessonStore();
   const { grades, loadAllGradeByGroup } = useGradeStore();
 
-  const { disciplines, fetchDisciplines } = useDisciplineStore();
+  const { disciplines, fetchDisciplinesOfTeacher } = useDisciplineStore();
   const { users: students, fetchStudentsByGroup } = useUserStore();
 
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
@@ -36,18 +38,20 @@ export default function TeacherJournalPage() {
     fetchGroups();
     if (selectedGroup) fetchStudentsByGroup(selectedGroup);
 
-    fetchDisciplines();
-  }, [selectedGroup, fetchStudentsByGroup, fetchGroups]);
+    if (user?.id) {
+      fetchDisciplinesOfTeacher(user?.id);
+    }
 
-  // Загружаем уроки при смене фильтров
+  }, [selectedGroup, fetchStudentsByGroup, fetchGroups, fetchDisciplinesOfTeacher, user]);
+
+
   useEffect(() => {
     if (selectedGroup && selectedDiscipline && user?.id) {
-      loadAllGradeByGroup(selectedGroup, selectedDiscipline)
-      console.log(selectedGroup, selectedDiscipline)
+      
+      loadAllGradeByGroup(selectedGroup, selectedDiscipline);
       loadLessonsByFilter(selectedGroup, selectedDiscipline);
-      console.log(grades)
     }
-  }, [selectedGroup, selectedDiscipline, semester, user?.id]);
+  }, [selectedGroup, selectedDiscipline, semester, user?.id, fetchDisciplinesOfTeacher]);
 
   const sortedLessons = [...lessons].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
@@ -58,10 +62,11 @@ export default function TeacherJournalPage() {
       <h1 className="text-2xl font-bold">Журнал преподавателя</h1>
 
       {/* === Фильтры === */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <Flex display='flex' direction='row' gap='2'>
         <GroupSelector setSelectedGroup={setSelectedGroup} />
 
-        <DisciplineSelector setSelectedDiscipline={setSelectedDiscipline} />
+        <DisciplineSelector loading={loading} disciplines={disciplines} setSelectedDiscipline={setSelectedDiscipline} />
+
 
         <div>
           <label>Семестр</label>
@@ -70,7 +75,7 @@ export default function TeacherJournalPage() {
             onValueChange={(val: string) => setSemester(Number(val))}
           >
             <Select.Content>
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+              {[1, 2].map((s) => (
                 <Select.Item key={s} value={String(s)}>
                   {s}
                 </Select.Item>
@@ -78,49 +83,51 @@ export default function TeacherJournalPage() {
             </Select.Content>
           </Select.Root>
         </div>
-      </div>
+      </Flex>
 
       {/* === Таблица журнала === */}
       {students.length > 0 && sortedLessons.length > 0 ? (
         <div className="overflow-auto">
-          <table className="min-w-full border border-gray-300 mt-6 text-sm text-center">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="border px-2 py-1 text-left">Студент</th>
+          <Table.Root variant="surface">
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeaderCell>Студент</Table.ColumnHeaderCell>
                 {sortedLessons.map((lesson) => (
-                  <th key={lesson.id} className="border px-2 py-1">
+                  <Table.ColumnHeaderCell key={lesson.id}>
                     <Link
-                      href={`/gradebook/${lesson.id}`}
+                        href={{
+                          pathname: `/gradebook/${lesson.id}`,
+                          query: {
+                            groupId: selectedGroup,
+                            disciplineId: selectedDiscipline,
+                          },
+                        }}
                       className="text-blue-600 hover:underline"
                     >
                       {dayjs(lesson.date).format("DD.MM")}
                     </Link>
-                  </th>
+                  </Table.ColumnHeaderCell>
                 ))}
-              </tr>
-            </thead>
-            <tbody>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
               {students.map((student) => (
-                <tr key={student.id}>
-                  <td className="border px-2 py-1 text-left">
+                <Table.Row key={student.id}>
+                  <Table.RowHeaderCell>
                     {`${student.lastName} ${student.firstName} ${student.patronymic}`}
-                  </td>
+                  </Table.RowHeaderCell>
                   {sortedLessons.map((lesson) => {
-                    const grade = grades.find(
-                      (g) => g.lesson.id === lesson.id && g.student.id === student.id
-                    );
+                    const grade = grades.find((g) => g.lesson.id === lesson.id && g.student.id === student.id);
                     return (
-                      <td key={lesson.id} className="border px-2 py-1">
-                        {grade?.grade ?? (
-                          <span className="text-gray-400">–</span>
-                        )}
-                      </td>
+                      <Table.Cell key={lesson.id}>
+                        {getGradeValue(grade)}
+                      </Table.Cell>
                     );
                   })}
-                </tr>
+                </Table.Row>
               ))}
-            </tbody>
-          </table>
+            </Table.Body>
+          </Table.Root>
         </div>
       ) : (
         <p className="text-gray-500">

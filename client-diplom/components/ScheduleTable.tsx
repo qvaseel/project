@@ -48,7 +48,7 @@ const ScheduleTable: React.FC = () => {
                 <Table.Body>
                   {groupedSchedule[Number(dayNumber)].map((item, index) => (
                     <Table.Row key={index}>
-                      <Table.RowHeaderCell>{++index}</Table.RowHeaderCell>
+                      <Table.RowHeaderCell>{item.orderNumber}</Table.RowHeaderCell>
                       <Table.Cell className="font-medium">
                         {item.discipline.name}
                       </Table.Cell>

@@ -7,7 +7,10 @@ export class GradeService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreateGradeDto) {
-    return await this.prisma.grade.create({ data });
+    return await this.prisma.grade.create({
+      data,
+      include: { student: true, lesson: true },
+    });
   }
 
   async findAll() {
@@ -27,7 +30,7 @@ export class GradeService {
         studentId: studentId,
         lesson: { schedule: { disciplineId: disciplineId } },
       },
-      include: {lesson: true, student: true}
+      include: { lesson: true, student: true },
     });
   }
 
@@ -39,7 +42,14 @@ export class GradeService {
       where: {
         lesson: { schedule: { groupId: groupId, disciplineId: disciplineId } },
       },
-      include: { lesson: true, student: true }
+      include: { lesson: true, student: true },
+    });
+  }
+
+  async update(id: number, data: Partial<CreateGradeDto>) {
+    return await this.prisma.grade.update({
+      where: { id },
+      data,
     });
   }
 }

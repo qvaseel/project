@@ -7,6 +7,7 @@ interface GradeStore {
   loadAllGradeByStudent: (studentId: number, disciplineId: number) => Promise<void>;
   loadAllGradeByGroup: (groupId: number, disciplineId: number) => Promise<void>;
   loadGradesByLessonId: (lessonId: number) => Grade[];
+  findGradeByStudentAndLesson: (studentId: number, lessonId: number) => Grade | undefined;
   createGrade: (grade: Partial<CreateGradeDto>) => Promise<void>;
   updateGrade: (id: number, grade: Partial<Grade>) => Promise<void>;
 }
@@ -28,13 +29,19 @@ export const useGradeStore = create<GradeStore>((set, get) => ({
     return get().grades.filter((g) => g.lesson.id === lessonId);
   },
 
+  findGradeByStudentAndLesson: (studentId, lessonId) => {
+    return get().grades.find(
+      (g) => g.student?.id === studentId && g.lesson?.id === lessonId
+    );
+  },
+
   createGrade: async (grade) => {
     const res = await api.post('/grades', grade);
     set((state) => ({ grades: [...state.grades, res.data] }));
   },
 
   updateGrade: async (id, grade) => {
-    const res = await api.put<Grade>(`grades/${id}`, grade);
+    const res = await api.patch<Grade>(`/grades/${id}`, grade);
     set((state) => ({
       grades: state.grades.map((g) => (g.id === id ? res.data : g)),
     }));

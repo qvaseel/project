@@ -75,14 +75,14 @@ export interface Grade {
   attend: boolean;
   lesson: Lesson;
   student: User;
-  grade: number;
+  grade?: number;
   comment?: string;
 }
 
 export interface CreateGradeDto {
   lessonId: number;
   studentId: number;
-  grade: number;
+  grade?: number;
   attend: boolean;
   comment?: string;
 }

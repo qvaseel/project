@@ -31,7 +31,7 @@ const TeacherScheduleTable: React.FC = () => {
               <Table.Body>
               {daySchedule.map((item, index) => (
                   <Table.Row key={index}>
-                    <Table.RowHeaderCell>{++index}</Table.RowHeaderCell>
+                    <Table.RowHeaderCell>{item.orderNumber}</Table.RowHeaderCell>
                     <Table.Cell>{item.discipline.name}</Table.Cell>
                     <Table.Cell>{item.room}</Table.Cell>
                     <Table.Cell>{item.group.name}</Table.Cell>

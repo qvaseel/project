@@ -1,6 +1,7 @@
 "use client";
 
 import { Profile } from "@/components/Profile";
+import StudentGradesPage from "@/components/StudentGradesPages";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { Box, Skeleton, Tabs, Text } from "@radix-ui/themes";
 
@@ -24,7 +25,7 @@ export default function ProfilePage() {
           </Tabs.Content>
 
           <Tabs.Content value="grades">
-            <Text size="2">Access and update your documents.</Text>
+            <StudentGradesPage/>
           </Tabs.Content>
 
           <Tabs.Content value="settings">

@@ -1,16 +1,21 @@
 import React from "react";
 import { useGroupStore } from "@/store/groupStore";
-import { Select } from "@radix-ui/themes";
+import { Select, Skeleton } from "@radix-ui/themes";
 import { useDisciplineStore } from "@/store/disciplineStore";
+import { Discipline } from "@/interface";
 
 interface GroupSelectorProps {
   setSelectedDiscipline: (id: number | null) => void;
+  disciplines: Discipline[];
+  loading: boolean;
 }
 
-const DisciplineSelector: React.FC<GroupSelectorProps> = ({ setSelectedDiscipline }) => {
-  const { disciplines } =  useDisciplineStore();
+const DisciplineSelector: React.FC<GroupSelectorProps> = ({
+  setSelectedDiscipline,
+  disciplines,
+  loading
+}) => {
   const [value, setValue] = React.useState<string>("");
-
 
   const handleChange = (val: string) => {
     setValue(val);
@@ -18,7 +23,7 @@ const DisciplineSelector: React.FC<GroupSelectorProps> = ({ setSelectedDisciplin
   };
 
   return (
-    <div className="mb-4">
+    <Skeleton loading={loading}>
       <Select.Root value={value} onValueChange={handleChange}>
         <Select.Trigger placeholder="Выберите дисциплину" />
         <Select.Content position="popper">
@@ -29,7 +34,7 @@ const DisciplineSelector: React.FC<GroupSelectorProps> = ({ setSelectedDisciplin
           ))}
         </Select.Content>
       </Select.Root>
-    </div>
+    </Skeleton>
   );
 };
 

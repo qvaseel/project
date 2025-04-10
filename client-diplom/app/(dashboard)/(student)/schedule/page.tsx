@@ -9,7 +9,7 @@ import { Spinner } from '@radix-ui/themes';
 const SchedulePage: React.FC = () => {
   const fetchScheduleForGroup = useScheduleStore((state) => state.fetchScheduleForGroup);
   const scLoading = useScheduleStore((state) => state.loading);
-  const { profileUser, loading, groupId } = useUserProfile();
+  const { profileUser, loading } = useUserProfile();
 
   useEffect(() => {
     if (profileUser?.group?.id) { 

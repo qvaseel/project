@@ -10,13 +10,13 @@ export default function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { token, decodedUser, profileUser, setProfileUser } = useAuthStore();
+  // const { token, decodedUser, profileUser, setProfileUser } = useAuthStore();
 
-  useEffect(() => {
-    if (token && decodedUser && !profileUser) {
-      setProfileUser(decodedUser.id);
-    }
-  }, [token, decodedUser, profileUser, setProfileUser]);
+  // useEffect(() => {
+  //   if (token && decodedUser && !profileUser) {
+  //     setProfileUser(decodedUser.id);
+  //   }
+  // }, [token, decodedUser, profileUser, setProfileUser]);
 
   return (
     <div className="flex gap-1 w-full">

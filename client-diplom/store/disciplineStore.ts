@@ -5,6 +5,7 @@ import { Discipline } from '@/interface/index';
 interface DisciplineState {
   disciplines: Discipline[];
   fetchDisciplines: () => Promise<void>;
+  fetchDisciplinesOfTeacher: (teacherId: number) => Promise<void>;
   createDiscipline: (discipline: Partial<Discipline>) => Promise<void>;
   updateDiscipline: (id: number, discipline: Partial<Discipline>) => Promise<void>;
   deleteDiscipline: (id: number) => Promise<void>;
@@ -15,6 +16,11 @@ export const useDisciplineStore = create<DisciplineState>((set) => ({
 
   fetchDisciplines: async () => {
     const { data } = await api.get<Discipline[]>('/disciplines');
+    set({ disciplines: data });
+  },
+
+  fetchDisciplinesOfTeacher: async (teacherId) => {
+    const { data } = await api.get<Discipline[]>(`/disciplines/by-teacher?teacherId=${teacherId}`);
     set({ disciplines: data });
   },
 

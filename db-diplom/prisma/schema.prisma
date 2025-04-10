@@ -149,7 +149,7 @@ model Grade {
   studentId Int  @map("student_id")
 
   attend Boolean @default(false)
-  grade   Int
+  grade   Int?
   comment String?
 
   createdAt DateTime @default(now()) @map("created_at")

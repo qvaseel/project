@@ -18,4 +18,8 @@ export class DisciplineService {
     async findOne(id: number) {
         return await this.prisma.discipline.findFirst({ where: { id } });
     }
+
+    async findAllByTeacher(teacherId: number) {
+        return await this.prisma.discipline.findMany({ where: { teacherId: teacherId }, include: { teacher: true }})
+    }
 }
