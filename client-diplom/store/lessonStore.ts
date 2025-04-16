@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { api } from '@/api/api';
-import { Lesson
+import { Lesson, LessonCreateDto
  } from '@/interface';
 
 interface LessonStore {
@@ -9,7 +9,7 @@ interface LessonStore {
   loadLessons: () => Promise<void>;
   loadLessonsByFilter: (  groupId: number, disciplineId: number) => Promise<void>;
   getLessonById: (id: number) => Promise<void>;
-  createLesson: (lesson: Partial<Lesson>) => Promise<void>;
+  createLesson: (lesson: LessonCreateDto) => Promise<void>;
   updateLesson: (id: number, lesson: Partial<Lesson>) => Promise<void>;
 }
 
@@ -38,7 +38,7 @@ export const useLessonStore = create<LessonStore>((set, get) => ({
   },
 
   updateLesson: async (id, lesson) => {
-    const res = await api.put<Lesson>(`/lessons/${id}`, lesson);
+    const res = await api.patch<Lesson>(`/lessons/${id}`, lesson);
     set((state) => ({
       lessons: state.lessons.map((l) => (l.id === id ? res.data : l)),
     }));

@@ -30,6 +30,13 @@ export class ScheduleService {
         });
     }
 
+    async findAllByGroupAndDiscipline(groupId: number, disciplineId: number) {
+        return await this.prisma.schedule.findMany({
+            where: { groupId: groupId, disciplineId: disciplineId },
+            include: { group: true, discipline: true, teacher: true }
+        })
+    }
+
     async update(id: number, data: CreateScheduleDto) {
         return await this.prisma.schedule.update({
             where: { id },

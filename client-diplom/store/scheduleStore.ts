@@ -6,6 +6,8 @@ interface ScheduleState {
   schedule: Schedule[];
   loading: boolean;
   error: string | null;
+  fetchSchedule: () => Promise<void>;
+  fetchScheduleByGroupAndDiscipline: (groupId: number, disciplineId: number) => Promise<void>
   fetchScheduleForGroup: (groupId: number) => Promise<void>;
   fetchScheduleForTeacher: (teacherId: number) => Promise<void>;
   createSchedule: (data: Partial<Schedule>) => Promise<void>;
@@ -17,6 +19,16 @@ export const useScheduleStore = create<ScheduleState>((set) => ({
   schedule: [],
   loading: false,
   error: null,
+
+  fetchSchedule: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get<Schedule[]>(`/schedule`);
+      set({ schedule: response.data, loading: false });
+    } catch (error: any) {
+      set({ error: error.message, loading: false });
+    }
+  },
 
   fetchScheduleForGroup: async (groupId: number) => {
     set({ loading: true, error: null });
@@ -36,6 +48,11 @@ export const useScheduleStore = create<ScheduleState>((set) => ({
     } catch (error: any) {
       set({ error: error.message, loading: false });
     }
+  },
+
+  fetchScheduleByGroupAndDiscipline: async (groupId: number, disciplineId: number) => {
+    const res = await api.get<Schedule[]>(`/schedule/group-and-discipline?groupId=${groupId}&disciplineId=${disciplineId}`);
+    set({ schedule: res.data });
   },
 
   createSchedule: async (data: Partial<Schedule>) => {

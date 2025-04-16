@@ -1,11 +1,10 @@
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
-export class CreateLessonDto {
-    @IsNotEmpty()
+export class UpdateLessonDto {
+
     @IsNumber()
     scheduleId: number;
 
-    @IsNotEmpty()
     @IsString()
     date: string;
 

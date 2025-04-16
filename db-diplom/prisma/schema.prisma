@@ -130,7 +130,8 @@ model Lesson {
   scheduleId Int      @map("shedule_id")
 
   date      String
-  topic     String
+  topic     String?
+  typeOfLesson String @default("Устный ответ")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 

@@ -12,6 +12,14 @@ export class GroupService {
     }
 
     public async findAll() {
-        return await this.prisma.group.findMany();
+        return await this.prisma.group.findMany({ include: { speciality: true }});
+    }
+
+    public async update(id: number, data: CreateGroupDto) {
+        return await this.prisma.group.update({ where: { id: id }, data })
+    }
+
+    public async delete(id: number) {
+        return await this.prisma.group.delete({ where: { id: id }})
     }
 }

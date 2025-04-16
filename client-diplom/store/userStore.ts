@@ -1,7 +1,7 @@
-import { create } from 'zustand';
-import { api } from '@/api/api';
-import { User } from '@/interface/index';
-import { getAuthToken } from '@/utils/auth';
+import { create } from "zustand";
+import { api } from "@/api/api";
+import { CreateUserDto, UpdateUserDto, User } from "@/interface/index";
+import { getAuthToken } from "@/utils/auth";
 
 interface UserState {
   users: User[];
@@ -10,12 +10,12 @@ interface UserState {
   fetchStudents: () => Promise<void>;
   fetchStudentsByGroup: (groupId: number) => Promise<void>;
   fetchTeachers: () => Promise<void>;
-  createUser: (user: Partial<User>) => Promise<void>;
-  updateUser: (id: number, user: Partial<User>) => Promise<void>;
+  createUser: (user: Partial<CreateUserDto>) => Promise<void>;
+  updateUser: (id: number, user: Partial<UpdateUserDto>) => Promise<void>;
   deleteUser: (id: number) => Promise<void>;
 }
 
-export const useUserStore = create<UserState>((set) => ({
+export const useUserStore = create<UserState>((set, get) => ({
   users: [],
   loading: false,
   error: null,
@@ -24,11 +24,9 @@ export const useUserStore = create<UserState>((set) => ({
     set({ loading: true, error: null });
     const token = getAuthToken();
     try {
-      const { data } = await api.get<User[]>('/users/get/students',
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const { data } = await api.get<User[]>("/users/get/students", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       set({ users: data, loading: false });
     } catch (error: any) {
       set({ error: error.message, loading: false });
@@ -39,11 +37,9 @@ export const useUserStore = create<UserState>((set) => ({
     set({ loading: true, error: null });
     const token = getAuthToken();
     try {
-      const { data } = await api.get<User[]>(`/users/get/students/${groupId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const { data } = await api.get<User[]>(`/users/get/students/${groupId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       set({ users: data, loading: false });
     } catch (error: any) {
       set({ error: error.message, loading: false });
@@ -54,36 +50,52 @@ export const useUserStore = create<UserState>((set) => ({
     set({ loading: true, error: null });
     const token = getAuthToken();
     try {
-      const { data } = await api.get<User[]>('/users/get/teachers',
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const { data } = await api.get<User[]>("/users/get/teachers", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       set({ users: data, loading: false });
     } catch (error: any) {
       set({ error: error.message, loading: false });
     }
   },
 
-  createUser: async (user) => {
+  deleteUser: async (id) => {
+    const token = getAuthToken();
     try {
-      await api.post('/users', user);
+      await api.delete(`/users/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      set((state) => ({
+        users: state.users.filter((user) => user.id !== id)
+      }))
+    } catch (error: any) {
+      set({ error: error.message });
+    }
+  },
+
+  createUser: async (user) => {
+    const token = getAuthToken();
+    try {
+      const res = await api.post<User>("/auth/reg", user, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      set((state) => ({ users: [...state.users, res.data] }));
+
+      await get().fetchStudents();
     } catch (error: any) {
       set({ error: error.message });
     }
   },
 
   updateUser: async (id, user) => {
+    const token = getAuthToken();
     try {
-      await api.put(`/users/${id}`, user);
-    } catch (error: any) {
-      set({ error: error.message });
-    }
-  },
-
-  deleteUser: async (id) => {
-    try {
-      await api.delete(`/users/${id}`);
+      await api.patch(`/users/${id}`, user, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      set((state) => ({
+        users: state.users.filter((user) => user.id !== id),
+      }));
     } catch (error: any) {
       set({ error: error.message });
     }

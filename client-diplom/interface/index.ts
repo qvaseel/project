@@ -4,9 +4,29 @@ export interface User {
   lastName: string;
   firstName: string;
   patronymic: string;
-  dayOfBirth: string;
+  dateOfBirth: string;
   role: Role;
   group?: Group;
+}
+
+export interface CreateUserDto {
+  email: string;
+  password: string;
+  lastName: string;
+  firstName: string;
+  patronymic: string;
+  dateOfBirth: string;
+  roleId: number;
+  groupId?: number;
+}
+
+export interface UpdateUserDto {
+  email: string;
+  lastName: string;
+  firstName: string;
+  patronymic: string;
+  dateOfBirth: string;
+  groupId?: number;
 }
 
 export interface Role {
@@ -20,6 +40,12 @@ export interface Group {
   name: string;
   course: number;
   speciality: Speciality;
+}
+
+export interface CreateGroupDto {
+  name: string;
+  course: number;
+  specialityId: number;
 }
 
 export interface Speciality {
@@ -53,7 +79,11 @@ export interface Discipline {
   id: number;
   name: string;
   teacher: User;
-  studyPlans: any;
+}
+
+export interface CreateDisciplineDto {
+  name: string;
+  teacherId: number;
 }
 
 export interface StudyPlan {
@@ -67,7 +97,15 @@ export interface Lesson {
   id: number;
   schedule: Schedule;
   date: string;
-  topic: string;
+  topic?: string;
+  typeOfLesson: string;
+}
+
+export interface LessonCreateDto {
+  scheduleId: number;
+  date: string;
+  topic?: string;
+  typeOfLesson: string;
 }
 
 export interface Grade {

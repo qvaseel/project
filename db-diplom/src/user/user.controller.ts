@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -13,12 +15,13 @@ import { Prisma, User } from '@prisma/client';
 import { AddRoleDto } from './dto/add-role.dto';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 
-  // @Roles('ADMIN')
+  @Roles('ADMIN')
   @UseGuards(RolesGuard)
   @Post()
   async createUser(@Body() data: CreateUserDto): Promise<User> {
@@ -65,5 +68,19 @@ export class UserController {
   @Get('/get/teachers')
   getTeachers() {
     return this.userService.findAllTeachers();
+  }
+
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
+  @Delete('/:id')
+  deleteUser(@Param('id') id: number) {
+    return this.userService.delete(Number(id));
+  }
+
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
+  @Patch('/:id')
+  updateUser(@Body() data: UpdateUserDto, @Param('id') id: number) {
+    return this.userService.update(Number(id), data);
   }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { DisciplineService } from './discipline.service';
 import { CreateDisciplineDto } from './dto/create-discipline.dto';
 
@@ -25,6 +25,16 @@ export class DisciplineController {
     @Get("/by-teacher")
     async getAllByTeacher(@Query('teacherId') teacherId: number) {
         return this.disciplineService.findAllByTeacher(Number(teacherId));
+    }
+
+    @Patch('/:id')
+    async updateDiscipline(@Param('id') id: number, @Body() data: CreateDisciplineDto) {
+        return this.disciplineService.update(Number(id), data)
+    }
+
+    @Delete("/:id")
+    async deleteDiscipline(@Param('id') id: number) {
+        return this.disciplineService.delete(Number(id));
     }
 
 }

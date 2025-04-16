@@ -1,11 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { Prisma, User } from '@prisma/client';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ExistUserBodyDto } from 'src/auth/dto/exist-user-body.dto';
 import { GetUserDto } from './dto/get-user.dto';
 import { RoleService } from 'src/role/role.service';
 import { AddRoleDto } from './dto/add-role.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -67,15 +67,38 @@ export class UserService {
   }
 
   public async findAllStudents() {
-    return this.userRepository.user.findMany({ where: { role: { value: 'STUDENT' } } });
+    return this.userRepository.user.findMany({
+      where: { role: { value: 'STUDENT' } },
+      include: {
+        role: true,
+        grades: true,
+        group: true,
+        shedule: true,
+      },
+    });
   }
 
   public async findAllStudentsByGroup(groupId: number) {
-    return this.userRepository.user.findMany({ where: { group: {id: groupId }} })
+    return this.userRepository.user.findMany({
+      where: { group: { id: groupId } },
+      include: {
+        role: true,
+        grades: true,
+        group: true,
+        shedule: true,
+      },
+    });
   }
 
   public async findAllTeachers() {
-    return this.userRepository.user.findMany({ where: { role: { value: 'TEACHER' } } });
+    return this.userRepository.user.findMany({
+      where: { role: { value: 'TEACHER' } },
+      include: {
+        role: true,
+        disciplines: true,
+        shedule: true,
+      },
+    });
   }
 
   public async addRole(data: AddRoleDto) {
@@ -96,4 +119,16 @@ export class UserService {
       data: { roleId: role.id },
     });
   }
+
+  public async delete(id: number) {
+    return await this.userRepository.user.delete({ where: { id: id } });
+  }
+
+  public async update(id: number, data: UpdateUserDto) {
+    return await this.userRepository.user.update({
+      where: { id },
+      data,
+    });
+  }
+
 }

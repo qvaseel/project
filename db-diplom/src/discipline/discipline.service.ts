@@ -22,4 +22,12 @@ export class DisciplineService {
     async findAllByTeacher(teacherId: number) {
         return await this.prisma.discipline.findMany({ where: { teacherId: teacherId }, include: { teacher: true }})
     }
+
+    async update(id: number, data: CreateDisciplineDto) {
+        return await this.prisma.discipline.update({ where: { id: id }, data })
+    }
+
+    async delete(id: number) {
+        return await this.prisma.discipline.delete({ where: { id: id }})
+    }
 }

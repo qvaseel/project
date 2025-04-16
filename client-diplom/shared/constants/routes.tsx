@@ -7,8 +7,8 @@ export const ROUTE = {
 
   ADMIN_PANEL: "admin-panel",
   ADMIN_SCHEDULE: "admin-schedule",
-  STUDENTS: "students",
-  TEACHERS: "teachers",
+  ADMIN_LESSONS: "admin-lessons",
+  ADMIN_CONTROL: "admin-control",
 
   TEACHER_PANEL: "teacher-panel",
   TEACHER_SCHEDULE: "teacher-schedule",
