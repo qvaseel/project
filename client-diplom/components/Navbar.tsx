@@ -12,7 +12,9 @@ const Navbar = () => {
 
   const handleLogout = () => {
     router.push("/login");
-    logout();
+    setTimeout(() => {
+      logout();
+    }, 1000); // задержка 1 секунда
   };
 
   return (

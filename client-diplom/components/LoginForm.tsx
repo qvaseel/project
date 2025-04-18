@@ -22,9 +22,7 @@ const LoginForm = () => {
     const success = await login(data.email, data.password);
     const { decodedUser } = useAuthStore.getState();
     if (success) {
-      console.log("Вход успешен");
       if (decodedUser?.roles) {
-        console.log("Роль пользователя:", decodedUser.roles);
 
         if (decodedUser.roles[0] === "ADMIN") {
           redirect("/admin-panel");

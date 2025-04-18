@@ -5,11 +5,13 @@ import { getAuthToken } from "@/utils/auth";
 
 interface UserState {
   users: User[];
+  user: User | null;
   loading: boolean;
   error: string | null;
   fetchStudents: () => Promise<void>;
   fetchStudentsByGroup: (groupId: number) => Promise<void>;
   fetchTeachers: () => Promise<void>;
+  fetchUser: (id: number) => Promise<void>;
   createUser: (user: Partial<CreateUserDto>) => Promise<void>;
   updateUser: (id: number, user: Partial<UpdateUserDto>) => Promise<void>;
   deleteUser: (id: number) => Promise<void>;
@@ -17,6 +19,7 @@ interface UserState {
 
 export const useUserStore = create<UserState>((set, get) => ({
   users: [],
+  user: null,
   loading: false,
   error: null,
 
@@ -54,6 +57,19 @@ export const useUserStore = create<UserState>((set, get) => ({
         headers: { Authorization: `Bearer ${token}` },
       });
       set({ users: data, loading: false });
+    } catch (error: any) {
+      set({ error: error.message, loading: false });
+    }
+  },
+
+  fetchUser: async (id) =>{
+    set({ loading: true, error: null });
+    const token = getAuthToken();
+    try {
+      const { data } = await api.get<User>(`/users/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      set({ user: data, loading: false });
     } catch (error: any) {
       set({ error: error.message, loading: false });
     }

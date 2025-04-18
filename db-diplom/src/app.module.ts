@@ -9,8 +9,9 @@ import { ScheduleModule } from './schedule/schedule.module';
 import { LessonModule } from './lesson/lesson.module';
 import { GradeModule } from './grade/grade.module';
 import { AuthModule } from './auth/auth.module';
+import { PortfolioModule } from './portfolio/portfolio.module';
 
 @Module({
-  imports: [UserModule, RoleModule, GroupModule, SpecialityModule, DisciplineModule, StudyPlanModule, ScheduleModule, LessonModule, GradeModule, AuthModule],
+  imports: [UserModule, RoleModule, GroupModule, SpecialityModule, DisciplineModule, StudyPlanModule, ScheduleModule, LessonModule, GradeModule, AuthModule, PortfolioModule],
 })
 export class AppModule {}

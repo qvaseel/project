@@ -1,6 +1,6 @@
 import { title } from "process";
 import { ROUTE } from "./routes";
-import { HomeIcon, CalendarIcon, UserIcon, TableCellsIcon, ComputerDesktopIcon } from "@heroicons/react/24/outline";
+import { HomeIcon, CalendarIcon, UserIcon, TableCellsIcon, ComputerDesktopIcon, PencilSquareIcon, UsersIcon } from "@heroicons/react/24/outline";
 import { link } from "fs";
 
 export const PAGES = {
@@ -27,7 +27,7 @@ export const PAGES = {
         {
             title: 'Главная',
             link: ROUTE.TEACHER_PANEL,
-            icon: CalendarIcon
+            icon: HomeIcon
         },
         {
             title: 'Расписание',
@@ -37,8 +37,13 @@ export const PAGES = {
         {
             title: 'Журнал',
             link: ROUTE.GRADEBOOK,
-            icon: CalendarIcon
+            icon: PencilSquareIcon
         },
+        {
+            title: 'Студенты',
+            link: ROUTE.TEACHER_STUDENTS,
+            icon: UsersIcon
+        }
     ],
 
     ADMIN: [

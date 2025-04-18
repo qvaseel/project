@@ -7,6 +7,7 @@ export interface User {
   dateOfBirth: string;
   role: Role;
   group?: Group;
+  portfolio?: Portfolio;
 }
 
 export interface CreateUserDto {
@@ -130,3 +131,23 @@ export interface DecodedUser {
   id: number;
   roles: string[];
 }
+
+export interface Achievement {
+  id: number;
+  title: string;
+  description?: string;
+  fileUrl: string;
+  passed: boolean;
+}
+
+export interface CreateAchievementDto {
+  title: string;
+  description?: string;
+  type: string;
+}
+
+export interface Portfolio {
+  id: number;
+  achievements: Achievement[];
+}
+

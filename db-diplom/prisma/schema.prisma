@@ -14,13 +14,13 @@ datasource db {
 }
 
 model User {
-  id         Int    @id @default(autoincrement())
-  email      String @unique
-  password   String
-  lastName   String @map("last_name")
-  firstName  String @map("first_name")
-  patronymic String
-  dateOfBirth String @map("date_of_birth") 
+  id          Int    @id @default(autoincrement())
+  email       String @unique
+  password    String
+  lastName    String @map("last_name")
+  firstName   String @map("first_name")
+  patronymic  String
+  dateOfBirth String @map("date_of_birth")
 
   role   Role @relation(fields: [roleId], references: [id])
   roleId Int  @default(1) @map("role_id")
@@ -32,10 +32,40 @@ model User {
   shedule     Schedule[]
   grades      Grade[]
 
+  portfolio   Portfolio? @relation(fields: [portfolioId], references: [id])
+  portfolioId Int?       @unique @map("portfolio_id")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("users")
+}
+
+model Portfolio {
+  id           Int           @id @default(autoincrement())
+  user         User?         @relation
+  achievements Achievement[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("portfolios")
+}
+
+model Achievement {
+  id          Int       @id @default(autoincrement())
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+  portfolioId Int       @map("portfolio_id")
+
+  title       String
+  description String?
+  fileUrl     String  @map("file_url")
+  passed      Boolean @default(false)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("achievements")
 }
 
 model Role {
@@ -101,12 +131,12 @@ model Discipline {
 }
 
 model Schedule {
-  id Int @id @default(autoincrement())
+  id          Int @id @default(autoincrement())
   orderNumber Int @default(0) @map("order_number")
 
   group   Group @relation(fields: [groupId], references: [id])
   groupId Int   @map("group_id")
- 
+
   discipline   Discipline @relation(fields: [disciplineId], references: [id])
   disciplineId Int        @map("discipline_id")
 
@@ -129,11 +159,11 @@ model Lesson {
   schedule   Schedule @relation(fields: [scheduleId], references: [id])
   scheduleId Int      @map("shedule_id")
 
-  date      String
-  topic     String?
-  typeOfLesson String @default("Устный ответ")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  date         String
+  topic        String?
+  typeOfLesson String   @default("Устный ответ")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   grades Grade[]
 
@@ -149,7 +179,7 @@ model Grade {
   student   User @relation(fields: [studentId], references: [id])
   studentId Int  @map("student_id")
 
-  attend Boolean @default(false)
+  attend  Boolean @default(false)
   grade   Int?
   comment String?
 

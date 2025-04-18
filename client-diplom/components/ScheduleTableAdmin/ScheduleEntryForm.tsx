@@ -34,7 +34,6 @@ const ScheduleEntryForm: React.FC<Props> = ({ dayOfWeek, selectedGroup }) => {
     });
 
     await fetchScheduleForGroup(selectedGroup);
-    console.log(data);
     reset();
   };
 

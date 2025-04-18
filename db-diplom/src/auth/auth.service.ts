@@ -40,7 +40,6 @@ export class AuthService {
         const user = await this.userService.findByEmail(userDto.email);
     
         if (!user) {
-            console.log("Пользователь не найден");
             throw new UnauthorizedException({ message: 'Некорректный email или пароль' });
         }
     

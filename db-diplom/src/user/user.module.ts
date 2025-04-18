@@ -4,11 +4,13 @@ import { UserController } from './user.controller';
 import { PrismaModule } from 'src/prisma.module';
 import { RoleModule } from 'src/role/role.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { PortfolioModule } from 'src/portfolio/portfolio.module';
 
 @Module({
   imports: [
     PrismaModule,
     RoleModule,
+    PortfolioModule,
     forwardRef(() => AuthModule)
   ],
   providers: [UserService],

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { LessonService } from './lesson.service';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 
@@ -35,5 +35,10 @@ export class LessonController {
   @Patch('/:id')
   async update(@Param('id') id: number, @Body() data: Partial<CreateLessonDto>) {
     return this.lessonService.update(Number(id), data);
+  }
+
+  @Delete('/:id')
+  async deleteLesson(@Param('id') id: number) {
+    return this.lessonService.delete(Number(id))
   }
 }

@@ -83,59 +83,6 @@ interface AuthState {
     )
   );
 
-// const useAuthStore = create<AuthState>((set) => ({
-//   isAuthenticated: false,
-//   decodedUser: null,
-//   token: typeof window !== "undefined" ? localStorage.getItem("token") : null,
-//   profileUser: null,
-
-//   setToken: (token) => {
-//     set({ token, isAuthenticated: !!token });
-
-//     if (token) {
-//       const decoded = jwtDecode<DecodedUser>(token);
-//       set({ decodedUser: decoded });
-//       useAuthStore.getState().setProfileUser(decoded.id); // Загружаем профиль при авторизации
-//     } else {
-//       set({ decodedUser: null, profileUser: null });
-//     }
-//   },
-
-//   setDecodedUser: (decodedUser) => set({ decodedUser }),
-
-//   login: async (email, password) => {
-//     try {
-//       const response = await api.post("/auth/login", { email, password });
-
-//       if (response.data?.token) {
-//         useAuthStore.getState().setToken(response.data.token);
-//         setAuthToken(response.data.token);
-//         return true;
-//       }
-
-//       return false;
-//     } catch (error) {
-//       console.error("Ошибка при входе:", error);
-//       return false;
-//     }
-//   },
-
-//   setProfileUser: async (id: number) => {
-//     try {
-//       const response = await api.get(`/users/${id}`, {
-//         headers: { Authorization: `Bearer ${useAuthStore.getState().token}` },
-//       });
-//       set({ profileUser: response.data });
-//     } catch (error) {
-//       console.log("Ошибка при загрузке профиля");
-//     }
-//   },
-
-//   logout: async () => {
-//     set({ token: null, decodedUser: null, isAuthenticated: false });
-//   },
-// }));
-
 if (typeof window !== "undefined") {
     const token = localStorage.getItem("token");
     if (token) {

@@ -23,7 +23,7 @@ export default function EditLessonPage() {
   const groupId = searchParams.get("groupId");
   const disciplineId = searchParams.get("disciplineId");
 
-  const { lesson, getLessonById, updateLesson } = useLessonStore();
+  const { lesson, getLessonById, updateLesson, deleteLesson } = useLessonStore();
   const { users, fetchStudentsByGroup } = useUserStore();
   const {
     grades,
@@ -84,13 +84,11 @@ export default function EditLessonPage() {
 
       try {
         if (existingGrade) {
-          console.log("Updating grade", existingGrade.id);
           await updateGrade(existingGrade.id, {
             grade: gradeValue ?? 0,
             attend,
           });
         } else {
-          console.log("Creating grade for student:", student.id);
           await createGrade({
             studentId: student.id,
             lessonId,
@@ -110,8 +108,16 @@ export default function EditLessonPage() {
     alert("Оценки сохранены!");
   };
 
+  const handleDelete = (id: number) => {
+    if (confirm("Вы действительно хотите удалить данное занятие?")) {
+      deleteLesson(id);
+      router.back();
+    }
+  };
+
   return (
     <Flex display="flex" direction="column" gap="4">
+      <Flex display='flex' direction='row' gap='4'>
       <Button
         onClick={() => {
           router.back();
@@ -119,6 +125,14 @@ export default function EditLessonPage() {
       >
         Вернуться назад
       </Button>
+
+      <Button
+      color="red"
+        onClick={() => handleDelete(lessonId)}
+      >
+        Удалить занятие
+      </Button>
+      </Flex>
 
       <Heading as="h4">
         Оценки за{" "}

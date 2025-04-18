@@ -11,6 +11,8 @@ interface LessonStore {
   getLessonById: (id: number) => Promise<void>;
   createLesson: (lesson: LessonCreateDto) => Promise<void>;
   updateLesson: (id: number, lesson: Partial<Lesson>) => Promise<void>;
+  deleteLesson: (id: number) => Promise<void>;
+
 }
 
 export const useLessonStore = create<LessonStore>((set, get) => ({
@@ -40,7 +42,14 @@ export const useLessonStore = create<LessonStore>((set, get) => ({
   updateLesson: async (id, lesson) => {
     const res = await api.patch<Lesson>(`/lessons/${id}`, lesson);
     set((state) => ({
-      lessons: state.lessons.map((l) => (l.id === id ? res.data : l)),
+      lessons: state.lessons.filter((l) => (l.id === id ? res.data : l)),
+    }));
+  },
+
+  deleteLesson: async (id) => {
+    const res = await api.delete<Lesson>(`/lessons/${id}`);
+    set((state) => ({
+      lessons: state.lessons.filter((l) => (l.id === id ? res.data : l)),
     }));
   },
 }));

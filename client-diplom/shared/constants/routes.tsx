@@ -12,5 +12,6 @@ export const ROUTE = {
 
   TEACHER_PANEL: "teacher-panel",
   TEACHER_SCHEDULE: "teacher-schedule",
+  TEACHER_STUDENTS: "teacher-students",
   GRADEBOOK: "gradebook"
 };

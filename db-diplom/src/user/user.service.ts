@@ -6,22 +6,34 @@ import { GetUserDto } from './dto/get-user.dto';
 import { RoleService } from 'src/role/role.service';
 import { AddRoleDto } from './dto/add-role.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PortfolioService } from 'src/portfolio/portfolio.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private userRepository: PrismaService,
     private roleService: RoleService,
+    private portfolioService: PortfolioService,
   ) {}
 
   public async create(data: CreateUserDto) {
     // const role = await this.roleService.getRoleByValue("STUDENT");
     const user = await this.userRepository.user.create({ data });
+    const portfolio = await this.userRepository.portfolio.create({
+      data: { user: { connect: { id: user.id}}},
+    })
+    const portfolioId = portfolio.id;
+
+    await this.userRepository.user.update({
+      where: { id: user.id },
+      data: { portfolioId },
+    });
+
     return user;
   }
 
   public async findByEmail(email: string) {
-    return await this.userRepository.user.findFirst({
+    return await this.userRepository.user.findUnique({
       where: { email },
       include: {
         role: true,
@@ -29,6 +41,7 @@ export class UserService {
         group: true,
         disciplines: true,
         shedule: true,
+        portfolio: true
       },
     });
   }
@@ -74,6 +87,7 @@ export class UserService {
         grades: true,
         group: true,
         shedule: true,
+        portfolio: true
       },
     });
   }
