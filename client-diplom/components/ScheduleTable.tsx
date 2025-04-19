@@ -18,7 +18,7 @@ const ScheduleTable: React.FC = () => {
   );
 
   return (
-    <div className="grid grid-cols-3 gap-4 w-full">
+    <div className="grid grid-cols-3 gap-4 w-full py-4">
       {Object.keys(groupedSchedule)
         .sort((a, b) => Number(a) - Number(b))
         .map((dayNumber) => {

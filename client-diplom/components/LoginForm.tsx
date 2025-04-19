@@ -25,11 +25,11 @@ const LoginForm = () => {
       if (decodedUser?.roles) {
 
         if (decodedUser.roles[0] === "ADMIN") {
-          redirect("/admin-panel");
+          redirect("/admin-schedule");
         } else if (decodedUser.roles[0] === "TEACHER") {
-          redirect("/teacher-panel");
+          redirect("/teacher-schedule");
         } else {
-          redirect("/dashboard");
+          redirect("/schedule");
         }
       }
     } else {
@@ -76,9 +76,6 @@ const LoginForm = () => {
           Войти
         </Button>
       </form>
-      <Link href="#" size="1" weight="light" underline="always" highContrast>
-        Забыли пароль?
-      </Link>
     </div>
   );
 };

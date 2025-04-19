@@ -5,11 +5,11 @@ import { link } from "fs";
 
 export const PAGES = {
     STUDENT: [
-        {
-            title: 'Главная',
-            link: ROUTE.DASHBOARD,
-            icon: HomeIcon
-        },
+        // {
+        //     title: 'Главная',
+        //     link: ROUTE.DASHBOARD,
+        //     icon: HomeIcon
+        // },
         {
             title: 'Расписание',
             link: ROUTE.SCHEDULE,
@@ -24,11 +24,11 @@ export const PAGES = {
 
     TEACHER: [
         
-        {
-            title: 'Главная',
-            link: ROUTE.TEACHER_PANEL,
-            icon: HomeIcon
-        },
+        // {
+        //     title: 'Главная',
+        //     link: ROUTE.TEACHER_PANEL,
+        //     icon: HomeIcon
+        // },
         {
             title: 'Расписание',
             link: ROUTE.TEACHER_SCHEDULE,
@@ -47,11 +47,11 @@ export const PAGES = {
     ],
 
     ADMIN: [
-        {
-            title: 'Админ-панель',
-            link: ROUTE.ADMIN_PANEL,
-            icon: HomeIcon
-        },
+        // {
+        //     title: 'Админ-панель',
+        //     link: ROUTE.ADMIN_PANEL,
+        //     icon: HomeIcon
+        // },
         {
             title: 'Расписание',
             link: ROUTE.ADMIN_SCHEDULE,

@@ -42,8 +42,8 @@ export default function StudentGradesPage() {
   };
 
   return (
-    <Flex direction="column" gap="4">
-      <Heading as="h4">Мои оценки</Heading>
+    <Flex direction="column" gap="4" p='4'>
+      <Heading as="h2" size='5'>Мои оценки</Heading>
 
       <Select.Root
         value={selectedDisciplineId?.toString() || ""}

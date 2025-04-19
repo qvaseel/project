@@ -62,30 +62,32 @@ export default function TeacherJournalPage() {
   ]);
 
   useEffect(() => {
-    if (selectedGroup && selectedDiscipline && user?.id) {
-      loadAllGradeByGroup(selectedGroup, selectedDiscipline);
-      loadLessonsByFilter(selectedGroup, selectedDiscipline);
-
-      fetchScheduleByGroupAndDiscipline(selectedGroup, selectedDiscipline).then(
-        () => {
-          const matching = schedule.find(
-            (s) =>
-              s.group.id === selectedGroup &&
-              s.discipline.id === selectedDiscipline &&
-              s.teacher.id === user.id
-          );
-          setSelectedScheduleId(matching?.id ?? null);
-        }
+    const loadData = async () => {
+      if (!selectedGroup || !selectedDiscipline || !user?.id) return;
+  
+      // Загрузка оценок и уроков
+      await loadAllGradeByGroup(selectedGroup, selectedDiscipline);
+      await loadLessonsByFilter(selectedGroup, selectedDiscipline);
+  
+      // Получаем расписание по группе и дисциплине
+      const scheduleData = await fetchScheduleByGroupAndDiscipline(
+        selectedGroup,
+        selectedDiscipline
       );
-    }
-  }, [
-    selectedGroup,
-    selectedDiscipline,
-    semester,
-    user?.id,
-    fetchDisciplinesOfTeacher,
-    schedule,
-  ]);
+  
+      // Ищем нужную запись в расписании
+      const matching = scheduleData.find(
+        (s) =>
+          s.group.id === selectedGroup &&
+          s.discipline.id === selectedDiscipline &&
+          s.teacher.id === user.id
+      );
+  
+      setSelectedScheduleId(matching?.id ?? null);
+    };
+  
+    loadData();
+  }, [selectedGroup, selectedDiscipline, semester, user?.id]);
 
   const sortedLessons = [...lessons].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()

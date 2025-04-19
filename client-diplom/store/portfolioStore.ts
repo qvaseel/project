@@ -79,7 +79,7 @@ export const usePortfolioStore = create<PortfolioStore>((set, get) => ({
   },
 
   updateAchievement: async (achievementId, formData, userId) => {
-    await api.patch(`/portfolio/achievement/${achievementId}`, formData, {
+    await api.patch(`/portfolio/achievement/update/${achievementId}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import ScheduleTable from '@/components/ScheduleTable';
 import { useScheduleStore } from '@/store/scheduleStore';
 import { useUserProfile } from '@/hooks/useUserProfile';
-import { Spinner } from '@radix-ui/themes';
+import { Heading, Spinner } from '@radix-ui/themes';
 
 const SchedulePage: React.FC = () => {
   const fetchScheduleForGroup = useScheduleStore((state) => state.fetchScheduleForGroup);
@@ -18,7 +18,8 @@ const SchedulePage: React.FC = () => {
   }, [fetchScheduleForGroup, profileUser]);
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto">
+      <Heading as='h2'>Расписание группы {profileUser?.group?.name}</Heading>
       <Spinner loading={loading || scLoading}>
         <ScheduleTable />
       </Spinner>

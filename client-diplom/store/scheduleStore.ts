@@ -7,7 +7,7 @@ interface ScheduleState {
   loading: boolean;
   error: string | null;
   fetchSchedule: () => Promise<void>;
-  fetchScheduleByGroupAndDiscipline: (groupId: number, disciplineId: number) => Promise<void>
+  fetchScheduleByGroupAndDiscipline: (groupId: number, disciplineId: number) => Promise<Schedule[]>
   fetchScheduleForGroup: (groupId: number) => Promise<void>;
   fetchScheduleForTeacher: (teacherId: number) => Promise<void>;
   createSchedule: (data: Partial<Schedule>) => Promise<void>;
@@ -53,6 +53,7 @@ export const useScheduleStore = create<ScheduleState>((set) => ({
   fetchScheduleByGroupAndDiscipline: async (groupId: number, disciplineId: number) => {
     const res = await api.get<Schedule[]>(`/schedule/group-and-discipline?groupId=${groupId}&disciplineId=${disciplineId}`);
     set({ schedule: res.data });
+    return res.data;
   },
 
   createSchedule: async (data: Partial<Schedule>) => {

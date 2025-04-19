@@ -118,7 +118,7 @@ model StudyPlan {
 
 model Discipline {
   id   Int    @id @default(autoincrement())
-  name String @unique
+  name String
 
   teacher   User @relation(fields: [teacherId], references: [id])
   teacherId Int  @map("teacher_id")
