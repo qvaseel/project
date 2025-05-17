@@ -4,14 +4,14 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { Prisma, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { AddRoleDto } from './dto/add-role.dto';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
@@ -30,7 +30,7 @@ export class UserController {
 
   @Roles('ADMIN', 'TEACHER', 'STUDENT')
   @UseGuards(RolesGuard)
-  @Get('/:id')
+  @Get('/search-user/:id')
   getOneUserById(@Param('id') id: number) {
     return this.userService.findById(Number(id));
   }
@@ -52,7 +52,7 @@ export class UserController {
   @Roles('ADMIN', 'TEACHER', 'STUDENT')
   @UseGuards(RolesGuard)
   @Get('/get/students')
-    getStudents() {
+  getStudents() {
     return this.userService.findAllStudents();
   }
 
@@ -82,5 +82,16 @@ export class UserController {
   @Patch('/:id')
   updateUser(@Body() data: UpdateUserDto, @Param('id') id: number) {
     return this.userService.update(Number(id), data);
+  }
+
+  @Roles('ADMIN', 'TEACHER', 'STUDENT')
+  @UseGuards(RolesGuard)
+  @Get('/search-users')
+  searchUsers(
+    @Query('query') query: string,
+    @Query('take') take: string = '5',
+    @Query('skip') skip: string = '0',
+  ) {
+    return this.userService.searchUsers(query, Number(take), Number(skip));
   }
 }

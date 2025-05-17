@@ -20,8 +20,8 @@ export class UserService {
     // const role = await this.roleService.getRoleByValue("STUDENT");
     const user = await this.userRepository.user.create({ data });
     const portfolio = await this.userRepository.portfolio.create({
-      data: { user: { connect: { id: user.id}}},
-    })
+      data: { user: { connect: { id: user.id } } },
+    });
     const portfolioId = portfolio.id;
 
     await this.userRepository.user.update({
@@ -41,7 +41,7 @@ export class UserService {
         group: true,
         disciplines: true,
         shedule: true,
-        portfolio: true
+        portfolio: true,
       },
     });
   }
@@ -87,7 +87,7 @@ export class UserService {
         grades: true,
         group: true,
         shedule: true,
-        portfolio: true
+        portfolio: true,
       },
     });
   }
@@ -145,4 +145,16 @@ export class UserService {
     });
   }
 
+  public async searchUsers(query: string, take = 5, skip = 0) {
+  return this.userRepository.user.findMany({
+    where: {
+      OR: [
+        { firstName: { contains: query, mode: 'insensitive' } },
+        { lastName: { contains: query, mode: 'insensitive' } },
+      ],
+    },
+    take,
+    skip,
+  });
+  }
 }

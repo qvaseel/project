@@ -15,6 +15,10 @@ interface UserState {
   createUser: (user: Partial<CreateUserDto>) => Promise<void>;
   updateUser: (id: number, user: Partial<UpdateUserDto>) => Promise<void>;
   deleteUser: (id: number) => Promise<void>;
+  searchResults: User[];
+  hasMoreResults: boolean;
+  searchUsers: (query: string, skip?: number) => Promise<void>;
+  clearSearch: () => void;
 }
 
 export const useUserStore = create<UserState>((set, get) => ({
@@ -62,11 +66,11 @@ export const useUserStore = create<UserState>((set, get) => ({
     }
   },
 
-  fetchUser: async (id) =>{
+  fetchUser: async (id) => {
     set({ loading: true, error: null });
     const token = getAuthToken();
     try {
-      const { data } = await api.get<User>(`/users/${id}`, {
+      const { data } = await api.get<User>(`/users/search-user/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       set({ user: data, loading: false });
@@ -82,8 +86,8 @@ export const useUserStore = create<UserState>((set, get) => ({
         headers: { Authorization: `Bearer ${token}` },
       });
       set((state) => ({
-        users: state.users.filter((user) => user.id !== id)
-      }))
+        users: state.users.filter((user) => user.id !== id),
+      }));
     } catch (error: any) {
       set({ error: error.message });
     }
@@ -116,4 +120,25 @@ export const useUserStore = create<UserState>((set, get) => ({
       set({ error: error.message });
     }
   },
+  searchResults: [],
+  hasMoreResults: false,
+
+  searchUsers: async (query, skip = 0) => {
+    const token = getAuthToken();
+    try {
+      const { data } = await api.get<User[]>(`/users/search-users`, {
+        headers: { Authorization: `Bearer ${token}` },
+        params: { query, take: 5, skip },
+      });
+
+      set((state) => ({
+        searchResults: skip === 0 ? data : [...state.searchResults, ...data],
+        hasMoreResults: data.length === 5,
+      }));
+    } catch (error: any) {
+      set({ error: error.message });
+    }
+  },
+
+  clearSearch: () => set({ searchResults: [], hasMoreResults: false }),
 }));
