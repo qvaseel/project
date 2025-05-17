@@ -37,10 +37,10 @@ export const Profile: React.FC<Props> = ({ profileUser }) => {
           <Text size='1' weight='light' color="gray">Отчество</Text>
           <Text>{profileUser.patronymic}</Text>
         </Flex>
-        <Flex as="div" display="flex" direction="column">
+        {profileUser.group && <Flex as="div" display="flex" direction="column">
           <Text size='1' weight='light' color="gray">Группа</Text>
           <Text> {profileUser.group ? <p>{profileUser.group.name}</p> : <p></p>}</Text>
-        </Flex>
+        </Flex>}
       </Flex>
     </Flex>
   );

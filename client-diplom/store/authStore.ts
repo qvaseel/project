@@ -44,7 +44,7 @@ interface AuthState {
 
         setProfileUser: async (id: number) => {
           try {
-            const response = await api.get(`/users/${id}`, {
+            const response = await api.get(`/users/search-user/${id}`, {
               headers: { Authorization: `Bearer ${get().token}` },
             });
             set({ profileUser: response.data });

@@ -152,6 +152,10 @@ export class UserService {
         { firstName: { contains: query, mode: 'insensitive' } },
         { lastName: { contains: query, mode: 'insensitive' } },
       ],
+      
+    },
+    include: {
+      role: true
     },
     take,
     skip,
